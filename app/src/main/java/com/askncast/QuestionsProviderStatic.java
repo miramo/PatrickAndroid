@@ -3,7 +3,7 @@ package com.askncast;
 import java.util.Random;
 
 /**
- * Created by User on 18-Feb-16.
+ * Created by Benjamin Piouffle on 18-Feb-16.
  */
 public class QuestionsProviderStatic implements IQuestionsProvider {
     private final String[] questions = {
