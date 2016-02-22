@@ -12,6 +12,7 @@ import android.support.v7.media.MediaRouter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.EditText;
 
 import com.google.android.gms.cast.ApplicationMetadata;
 import com.google.android.gms.cast.Cast;
@@ -22,15 +23,24 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.orm.SugarContext;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Init database
+        SugarContext.init(this);
+        // Init button binding
+        ButterKnife.bind(this);
     }
 
     @Override
@@ -68,5 +78,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop()
     {
         super.onStop();
+    }
+
+    @OnClick(R.id.msg_send)
+    public void onSendClicked() {
+        try {
+            JSONObject obj = new JSONObject(((EditText)findViewById(R.id.msg_edit_text)).getText().toString());
+            AskNCastApplication.getInstance().sendMessage(obj);
+        } catch (JSONException e) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Failed to parse JSON")
+                    .setNeutralButton("OK", null)
+                    .create()
+                    .show();
+        }
     }
 }

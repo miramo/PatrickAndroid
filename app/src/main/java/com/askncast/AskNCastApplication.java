@@ -38,7 +38,7 @@ public class AskNCastApplication extends Application {
     private GoogleApiClient mApiClient;
     private String mCastSessionId;
     private GameManagerClient mGameManagerClient;
-    private String mPlayerId;
+    private String mPlayerId = null;
 
     public AskNCastApplication() {
         mInstance = this;
@@ -150,7 +150,10 @@ public class AskNCastApplication extends Application {
         public void onResult(@NonNull Cast.ApplicationConnectionResult applicationConnectionResult) {
             Status status = applicationConnectionResult.getStatus();
             if (status.isSuccess()) {
-                mCastSessionId = applicationConnectionResult.getSessionId();
+                String sessionId = applicationConnectionResult.getSessionId();
+                if (!sessionId.equals(mCastSessionId))
+                    mPlayerId = null;
+                mCastSessionId = sessionId;
                 GameManagerClient.getInstanceFor(mApiClient, mCastSessionId)
                         .setResultCallback(new GameManagerGetInstanceResultCallback());
             }
@@ -168,7 +171,7 @@ public class AskNCastApplication extends Application {
             }
             else {
                 mGameManagerClient = gameManagerInstanceResult.getGameManagerClient();
-                mGameManagerClient.sendPlayerAvailableRequest(null).setResultCallback(new PlayerAvailableRequestResultCallback());
+                mGameManagerClient.sendPlayerAvailableRequest(mPlayerId, null).setResultCallback(new PlayerAvailableRequestResultCallback());
             }
         }
     }
@@ -185,7 +188,7 @@ public class AskNCastApplication extends Application {
     }
 
     public void sendMessage(JSONObject obj) {
-        mGameManagerClient.sendGameRequest(obj).setResultCallback(new GameRequestResultCallback());
+        mGameManagerClient.sendGameRequest(mPlayerId, obj).setResultCallback(new GameRequestResultCallback());
     }
 
     private class GameRequestResultCallback implements ResultCallback<GameManagerClient.GameManagerResult> {

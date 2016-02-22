@@ -26,5 +26,9 @@ dependencies {
     // Chromecast
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:mediarouter-v7:23.1.1'
-    compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.google.android.gms:play-services-cast:8.4.0'
+    // ORM
+    compile 'com.github.satyan:sugar:1.4'
+    // ButterKnife
+    compile 'com.jakewharton:butterknife:7.0.1'
 }
