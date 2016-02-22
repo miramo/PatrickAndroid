@@ -1,47 +1,36 @@
 package com.askncast;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.MediaRouteActionProvider;
 import android.support.v7.media.MediaRouteSelector;
 import android.support.v7.media.MediaRouter;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.android.gms.cast.ApplicationMetadata;
+import com.google.android.gms.cast.Cast;
 import com.google.android.gms.cast.CastDevice;
 import com.google.android.gms.cast.CastMediaControlIntent;
+import com.google.android.gms.cast.games.GameManagerClient;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
-    private MediaRouter mediaRouter;
-    private MediaRouteSelector mediaRouteSelector;
 
-    /*
-    Init media router callback (triggered when selecting a device from chromecast icon)
-     */
-    private final MediaRouter.Callback mediaRouterCallback = new MediaRouter.Callback()
-    {
-        @Override
-        public void onRouteSelected(MediaRouter router, MediaRouter.RouteInfo route)
-        {
-            CastDevice device = CastDevice.getFromBundle(route.getExtras());
-            //setSelectedDevice(device);
-        }
-
-        @Override
-        public void onRouteUnselected(MediaRouter router, MediaRouter.RouteInfo route)
-        {
-            //setSelectedDevice(null);
-        }
-    };
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        this.mediaRouter = MediaRouter.getInstance(getApplicationContext());
-        mediaRouteSelector = new MediaRouteSelector.Builder().addControlCategory(CastMediaControlIntent.categoryForCast(getString(R.string.APP_ID))).build();
     }
 
     @Override
@@ -53,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         // Link icon and chromecast target to our Ask'n'cast receiver app
         MenuItem mediaRouteMenuItem = menu.findItem(R.id.media_route_menu_item);
         MediaRouteActionProvider mediaRouteActionProvider = (MediaRouteActionProvider) MenuItemCompat.getActionProvider(mediaRouteMenuItem);
-        mediaRouteActionProvider.setRouteSelector(mediaRouteSelector);
+        mediaRouteActionProvider.setRouteSelector(AskNCastApplication.getInstance().getMediaRouteSelector());
         return true;
     }
 
@@ -61,14 +50,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart()
     {
         super.onStart();
-        mediaRouter.addCallback(mediaRouteSelector, mediaRouterCallback, MediaRouter.CALLBACK_FLAG_PERFORM_ACTIVE_SCAN);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        AskNCastApplication.getInstance().startScan();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        AskNCastApplication.getInstance().stopScan();
     }
 
     @Override
     protected void onStop()
     {
-        //setSelectedDevice(null);
-        mediaRouter.removeCallback(mediaRouterCallback);
         super.onStop();
     }
 }
