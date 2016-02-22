@@ -1,0 +1,1 @@
+INSERT INTO QUESTION(adult_only, text) VALUES(1, "Have you ever fantasised about anyone in this room ?");

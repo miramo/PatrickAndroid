@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import com.google.android.gms.cast.CastDevice;
 import com.google.android.gms.cast.CastMediaControlIntent;
+import com.orm.SugarContext;
 
 public class MainActivity extends AppCompatActivity {
     private MediaRouter mediaRouter;
@@ -39,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Init database
+        SugarContext.init(this);
 
         this.mediaRouter = MediaRouter.getInstance(getApplicationContext());
         mediaRouteSelector = new MediaRouteSelector.Builder().addControlCategory(CastMediaControlIntent.categoryForCast(getString(R.string.APP_ID))).build();
