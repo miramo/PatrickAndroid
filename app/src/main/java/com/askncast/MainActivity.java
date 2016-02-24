@@ -12,13 +12,16 @@ import android.support.v7.media.MediaRouter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 
 import com.google.android.gms.cast.ApplicationMetadata;
 import com.google.android.gms.cast.Cast;
 import com.google.android.gms.cast.CastDevice;
 import com.google.android.gms.cast.CastMediaControlIntent;
 import com.google.android.gms.cast.games.GameManagerClient;
+import com.google.android.gms.cast.games.GameManagerState;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
@@ -41,6 +44,12 @@ public class MainActivity extends AppCompatActivity {
         SugarContext.init(this);
         // Init button binding
         ButterKnife.bind(this);
+
+        AskNCastApplication.getInstance().setListener(new AskNCastListener());
+
+        NumberPicker np = (NumberPicker)findViewById(R.id.prognosis);
+        np.setMinValue(0);
+        np.setMaxValue(10);
     }
 
     @Override
@@ -74,23 +83,55 @@ public class MainActivity extends AppCompatActivity {
         AskNCastApplication.getInstance().stopScan();
     }
 
+    @OnClick(R.id.ready_button)
+    public void onReadyClick() {
+        AskNCastApplication.getInstance().startPlaying();
+    }
+
+    @OnClick(R.id.question_send)
+    public void onSendQuestionClick() {
+        String question = ((EditText)findViewById(R.id.question)).getText().toString();
+        AskNCastApplication.getInstance().sendQuestion(question);
+    }
+
+    @OnClick(R.id.vote_send)
+    public void onSendVoteClick() {
+        boolean vote = ((CheckBox)findViewById(R.id.vote)).isChecked();
+        int progno = ((NumberPicker)findViewById(R.id.prognosis)).getValue();
+        AskNCastApplication.getInstance().sendVote(vote, progno);
+    }
+
+    @OnClick(R.id.skip)
+    public void onSkipClick() {
+        AskNCastApplication.getInstance().skip();
+    }
+
     @Override
     protected void onStop()
     {
         super.onStop();
     }
 
-    @OnClick(R.id.msg_send)
-    public void onSendClicked() {
-        try {
-            JSONObject obj = new JSONObject(((EditText)findViewById(R.id.msg_edit_text)).getText().toString());
-            AskNCastApplication.getInstance().sendMessage(obj);
-        } catch (JSONException e) {
-            new AlertDialog.Builder(this)
-                    .setMessage("Failed to parse JSON")
-                    .setNeutralButton("OK", null)
-                    .create()
-                    .show();
+    class AskNCastListener implements AskNCastApplication.Listener {
+
+        @Override
+        public String getPlayerName() {
+            return ((EditText)findViewById(R.id.player_name)).getText().toString();
+        }
+
+        @Override
+        public void onStateChanged(GameManagerState newState, GameManagerState oldState) {
+            if (newState.hasGameDataChanged(oldState)) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage("Game data changed: " + newState.getGameData())
+                        .create()
+                        .show();
+            }
+        }
+
+        @Override
+        public void onGameMessageReceived(String s, JSONObject jsonObject) {
+
         }
     }
 }

@@ -12,19 +12,85 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Hello World!" />
-
-        <EditText
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/msg_edit_text"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name: "
+                android:textSize="30sp"/>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/player_name"
+                android:textSize="30sp"/>
+
+        </LinearLayout>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Send msg"
-            android:id="@+id/msg_send"/>
+            android:text="Set ready"
+            android:textSize="30sp"
+            android:id="@+id/ready_button"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layoutDirection="rtl">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Send"
+                android:textSize="30sp"
+                android:id="@+id/question_send"/>
+
+            <EditText
+                android:id="@+id/question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Question"
+                android:textSize="30sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layoutDirection="rtl">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Send"
+                android:textSize="30sp"
+                android:id="@+id/vote_send"/>
+
+            <NumberPicker
+                android:layout_width="wrap_content"
+                android:layout_height="60sp"
+                android:id="@+id/prognosis"/>
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="60sp"
+                android:id="@+id/vote"/>
+
+        </LinearLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="skip"
+            android:textSize="30sp"
+            android:id="@+id/skip"/>
+
     </LinearLayout>
 
 </RelativeLayout>

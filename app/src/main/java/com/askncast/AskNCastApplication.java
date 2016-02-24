@@ -2,6 +2,7 @@ package com.askncast;
 
 import android.app.Application;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.media.MediaRouteSelector;
@@ -18,6 +19,7 @@ import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -39,6 +41,13 @@ public class AskNCastApplication extends Application {
     private String mCastSessionId;
     private GameManagerClient mGameManagerClient;
     private String mPlayerId = null;
+
+    public interface Listener extends GameManagerClient.Listener
+    {
+        String getPlayerName();
+    }
+
+    private Listener mListener = null;
 
     public AskNCastApplication() {
         mInstance = this;
@@ -171,7 +180,18 @@ public class AskNCastApplication extends Application {
             }
             else {
                 mGameManagerClient = gameManagerInstanceResult.getGameManagerClient();
-                mGameManagerClient.sendPlayerAvailableRequest(mPlayerId, null).setResultCallback(new PlayerAvailableRequestResultCallback());
+                mGameManagerClient.setListener(mListener);
+
+                JSONObject extra = new JSONObject();
+                try {
+                    extra.put("name", mListener.getPlayerName());
+                } catch (JSONException e) {
+                    // Ugly, but shouldn't happen
+                    e.printStackTrace();
+                    System.exit(1);
+                }
+
+                mGameManagerClient.sendPlayerAvailableRequest(mPlayerId, extra).setResultCallback(new PlayerAvailableRequestResultCallback());
             }
         }
     }
@@ -198,5 +218,58 @@ public class AskNCastApplication extends Application {
                 setCastDevice(null);
             }
         }
+    }
+
+    public void setListener(Listener listener)
+    {
+        this.mListener = listener;
+        if (this.mGameManagerClient != null)
+            this.mGameManagerClient.setListener(listener);
+    }
+
+    public void startPlaying()
+    {
+        mGameManagerClient.sendPlayerPlayingRequest(null).setResultCallback(new GameRequestResultCallback());
+    }
+
+    public void sendQuestion(String question)
+    {
+        JSONObject msg = new JSONObject();
+
+        try {
+            msg.put("type", "question");
+            msg.put("question", question);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            System.exit(2);
+        }
+        this.sendMessage(msg);
+    }
+
+    public void sendVote(boolean yes, int prognosis)
+    {
+        JSONObject msg = new JSONObject();
+
+        try {
+            msg.put("type", "vote");
+            msg.put("vote", (yes ? "yes" : "no"));
+            msg.put("prognosis", prognosis);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            System.exit(3);
+        }
+        this.sendMessage(msg);
+    }
+
+    public void skip() {
+        JSONObject msg = new JSONObject();
+
+        try {
+            msg.put("type", "skip");
+        } catch (JSONException e) {
+            e.printStackTrace();
+            System.exit(4);
+        }
+        this.sendMessage(msg);
     }
 }
