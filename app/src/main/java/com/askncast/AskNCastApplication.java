@@ -272,4 +272,17 @@ public class AskNCastApplication extends Application {
         }
         this.sendMessage(msg);
     }
+
+    public void openDebug(boolean open) {
+        JSONObject msg = new JSONObject();
+
+        try {
+            msg.put("type", "debugUI");
+            msg.put("toggle", open);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            System.exit(4);
+        }
+        this.sendMessage(msg);
+    }
 }
