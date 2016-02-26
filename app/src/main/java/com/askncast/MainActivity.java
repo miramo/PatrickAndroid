@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String FRAG_INIT = "Init";
     private static final String FRAG_WAIT_PHASE = "WaitPhase";
+    private static final String FRAG_PICK_QUESTION = "PickQuestion";
+    private static final String FRAG_WAIT_FOR_QUESTION = "WaitQuestion";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
 
         mFragments = new HashMap<>();
         mFragments.put(FRAG_INIT, new InitFragment());
+        mFragments.put(FRAG_WAIT_PHASE, new WaitPhaseFragment());
+        mFragments.put(FRAG_PICK_QUESTION, new PickQuestionFragment());
+        mFragments.put(FRAG_WAIT_FOR_QUESTION, new WaitQuestionFragment());
 
         this.moveToFragment(FRAG_INIT);
     }
@@ -148,7 +153,11 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if (state.getGameData().has("phase") && state.getGameData().getString("phase").equals("choosing")) {
                     AskNCastApplication.getInstance().startPlaying();
-                    // TODO
+
+                    if (state.getGameData().has("questioner_id") && state.getGameData().getString("questioner_id").equals(AskNCastApplication.getInstance().getPlayerId()))
+                        moveToFragment(FRAG_PICK_QUESTION, state);
+                    else
+                        moveToFragment(FRAG_WAIT_FOR_QUESTION, state);
                     return;
                 }
             } catch (Exception e) {

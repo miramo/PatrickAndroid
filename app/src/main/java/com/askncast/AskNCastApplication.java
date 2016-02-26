@@ -43,6 +43,10 @@ public class AskNCastApplication extends Application {
     private GameManagerClient mGameManagerClient;
     private String mPlayerId = null;
 
+    public String getPlayerId() {
+        return mPlayerId;
+    }
+
     public interface Listener extends GameManagerClient.Listener
     {
         String getPlayerName();
