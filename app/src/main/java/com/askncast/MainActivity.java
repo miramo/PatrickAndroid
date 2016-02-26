@@ -187,6 +187,7 @@ public class MainActivity extends AppCompatActivity {
                         .create()
                         .show();
             }
+            mFragment.onStateChanged(newState);
         }
 
         @Override
