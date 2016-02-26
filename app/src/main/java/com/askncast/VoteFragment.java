@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -51,6 +52,9 @@ public class VoteFragment extends StateAwareFragment {
     @OnClick(R.id.vote_send)
     public void onVoteSend() {
         AskNCastApplication.getInstance().sendVote(((Switch)getView().findViewById(R.id.answer_switch)).isChecked(), ((NumberPicker)getView().findViewById(R.id.prognosis_number_picker)).getValue());
+        getView().findViewById(R.id.question_text_view).setEnabled(false);
+        getView().findViewById(R.id.prognosis_number_picker).setEnabled(false);
+        getView().findViewById(R.id.vote_send).setVisibility(View.GONE);
     }
 
     @Override
