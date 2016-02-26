@@ -9,7 +9,7 @@
         <meta-data android:name="VERSION" android:value="2" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.askncast" />
         <!--Activities-->
-        <activity android:name=".DebugMainActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

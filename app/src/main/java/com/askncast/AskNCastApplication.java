@@ -13,6 +13,7 @@ import com.google.android.gms.cast.Cast;
 import com.google.android.gms.cast.CastDevice;
 import com.google.android.gms.cast.CastMediaControlIntent;
 import com.google.android.gms.cast.games.GameManagerClient;
+import com.google.android.gms.cast.games.GameManagerState;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Result;
@@ -45,6 +46,8 @@ public class AskNCastApplication extends Application {
     public interface Listener extends GameManagerClient.Listener
     {
         String getPlayerName();
+        void onDisconnected();
+        void onConnected(GameManagerState state);
     }
 
     private Listener mListener = null;
@@ -63,6 +66,7 @@ public class AskNCastApplication extends Application {
         mMediaRouterCallback = new MediaRouterCallback();
     }
 
+    public MediaRouter getMediaRouter() { return mMediaRouter; }
     public MediaRouteSelector getMediaRouteSelector() {
         return this.mMediaRouterSelector;
     }
@@ -88,6 +92,8 @@ public class AskNCastApplication extends Application {
             mApiClient.disconnect();
         }
         mApiClient = null;
+        if (mListener != null)
+            mListener.onDisconnected();
     }
 
     private void connectToApi() {
@@ -182,16 +188,23 @@ public class AskNCastApplication extends Application {
                 mGameManagerClient = gameManagerInstanceResult.getGameManagerClient();
                 mGameManagerClient.setListener(mListener);
 
-                JSONObject extra = new JSONObject();
-                try {
-                    extra.put("name", mListener.getPlayerName());
-                } catch (JSONException e) {
-                    // Ugly, but shouldn't happen
-                    e.printStackTrace();
-                    System.exit(1);
-                }
+                String playerName = mListener.getPlayerName();
 
-                mGameManagerClient.sendPlayerAvailableRequest(mPlayerId, extra).setResultCallback(new PlayerAvailableRequestResultCallback());
+                if (playerName == null || playerName.isEmpty()) {
+                    setCastDevice(null);
+                }
+                else {
+                    JSONObject extra = new JSONObject();
+                    try {
+                        extra.put("name", playerName);
+                    } catch (JSONException e) {
+                        // Ugly, but shouldn't happen
+                        e.printStackTrace();
+                        System.exit(1);
+                    }
+
+                    mGameManagerClient.sendPlayerAvailableRequest(mPlayerId, extra).setResultCallback(new PlayerAvailableRequestResultCallback());
+                }
             }
         }
     }
@@ -201,6 +214,8 @@ public class AskNCastApplication extends Application {
         public void onResult(@NonNull GameManagerClient.GameManagerResult gameManagerResult) {
             if (gameManagerResult.getStatus().isSuccess()) {
                 mPlayerId = gameManagerResult.getPlayerId();
+                if (mListener != null)
+                    mListener.onConnected(mGameManagerClient.getCurrentState());
             } else {
                 setCastDevice(null);
             }

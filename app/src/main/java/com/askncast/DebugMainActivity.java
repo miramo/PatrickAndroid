@@ -117,6 +117,16 @@ public class DebugMainActivity extends AppCompatActivity {
         }
 
         @Override
+        public void onDisconnected() {
+
+        }
+
+        @Override
+        public void onConnected(GameManagerState state) {
+
+        }
+
+        @Override
         public void onStateChanged(GameManagerState newState, GameManagerState oldState) {
             if (newState.hasGameDataChanged(oldState)) {
                 new AlertDialog.Builder(DebugMainActivity.this)
