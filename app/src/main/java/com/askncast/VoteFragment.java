@@ -27,6 +27,7 @@ public class VoteFragment extends StateAwareFragment {
 
     private String mQuestion;
     private int mNbPlayers;
+    private boolean mSkipAvail = false;
 
     public VoteFragment() {
         // Required empty public constructor
@@ -51,10 +52,10 @@ public class VoteFragment extends StateAwareFragment {
 
     @OnClick(R.id.vote_send)
     public void onVoteSend() {
-        AskNCastApplication.getInstance().sendVote(((Switch)getView().findViewById(R.id.answer_switch)).isChecked(), ((NumberPicker)getView().findViewById(R.id.prognosis_number_picker)).getValue());
-        getView().findViewById(R.id.question_text_view).setEnabled(false);
+        getView().findViewById(R.id.answer_switch).setEnabled(false);
         getView().findViewById(R.id.prognosis_number_picker).setEnabled(false);
         getView().findViewById(R.id.vote_send).setVisibility(View.GONE);
+        AskNCastApplication.getInstance().sendVote(((Switch)getView().findViewById(R.id.answer_switch)).isChecked(), ((NumberPicker)getView().findViewById(R.id.prognosis_number_picker)).getValue());
     }
 
     @Override
@@ -62,6 +63,7 @@ public class VoteFragment extends StateAwareFragment {
         try {
             mQuestion = newState.getGameData().getString("question");
             mNbPlayers = newState.getPlayersInState(GameManagerClient.PLAYER_STATE_PLAYING).size();
+            mSkipAvail = newState.getGameData().getBoolean("skip_avail");
         } catch (JSONException e) {
             e.printStackTrace();
         }
