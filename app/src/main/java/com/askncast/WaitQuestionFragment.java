@@ -4,6 +4,7 @@ package com.askncast;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.TextViewCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +37,12 @@ public class WaitQuestionFragment extends StateAwareFragment {
     @Override
     public void onStateChanged(GameManagerState newState) {
         try {
-            if (newState.getGameData().has("questioner"))
-                ((TextView)getView().findViewById(R.id.wait_question_text_view)).setText(String.format(getString(R.string.wait_question), newState.getGameData().getString("questioner")));
+            if (newState.getGameData().has("questioner")) {
+                new AlertDialog.Builder(getActivity())
+                        .setMessage("Questioner: " + newState.getGameData().getString("questioner"))
+                        .create().show();
+                ((TextView) getView().findViewById(R.id.wait_question_text_view)).setText(String.format(getString(R.string.wait_question), newState.getGameData().getString("questioner")));
+            }
             if (newState.getGameData().has("skip_avail") && newState.getGameData().getBoolean("skip_avail"))
                 getView().findViewById(R.id.skip_button).setVisibility(View.VISIBLE);
             else

@@ -77,8 +77,13 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
             mFragment = to;
         }
-        if (state != null)
+        if (state != null) {
+            new AlertDialog.Builder(MainActivity.this)
+                    .setMessage("Game state: " + state.getGameData())
+                    .create()
+                    .show();
             mFragment.onStateChanged(state);
+        }
     }
 
     @Override
