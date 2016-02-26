@@ -51,6 +51,20 @@ public class MainActivity extends AppCompatActivity {
         this.moveToFragment(FRAG_INIT);
     }
 
+    private boolean mOpenDebug = true;
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.debug_menu_item:
+                AskNCastApplication.getInstance().openDebug(mOpenDebug);
+                mOpenDebug = !mOpenDebug;
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void moveToFragment(String fragName) {
         moveToFragment(fragName, null);
     }

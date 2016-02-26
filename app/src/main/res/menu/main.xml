@@ -6,4 +6,8 @@
         android:title="Chromecast"
         app:actionProviderClass="android.support.v7.app.MediaRouteActionProvider"
         app:showAsAction="always"/>
+    <item
+        android:title="Debug"
+        android:id="@+id/debug_menu_item"
+        />
 </menu>
