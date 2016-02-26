@@ -1,13 +1,39 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.askncast.PickQuestionFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:id="@+id/custom_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layoutDirection="rtl">
+
+        <Button
+            android:id="@+id/custom_question_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Send"/>
+
+        <EditText
+            android:id="@+id/custom_question_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/ask_a_custom_question"
+            android:inputType="textCapSentences"
+            android:imeOptions="actionSend" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/question_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="TMP PICK QUESTION" />
+        android:layout_above="@id/custom_section">
 
-</FrameLayout>
+    </ListView>
+
+</RelativeLayout>

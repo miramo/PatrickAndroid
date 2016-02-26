@@ -14,6 +14,7 @@ import android.widget.NumberPicker;
 import com.google.android.gms.cast.games.GameManagerState;
 import com.orm.SugarContext;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String FRAG_WAIT_PHASE = "WaitPhase";
     private static final String FRAG_PICK_QUESTION = "PickQuestion";
     private static final String FRAG_WAIT_FOR_QUESTION = "WaitQuestion";
+    private static final String FRAG_VOTE = "Vote";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         mFragments.put(FRAG_WAIT_PHASE, new WaitPhaseFragment());
         mFragments.put(FRAG_PICK_QUESTION, new PickQuestionFragment());
         mFragments.put(FRAG_WAIT_FOR_QUESTION, new WaitQuestionFragment());
+        mFragments.put(FRAG_VOTE, new VoteFragment());
 
         this.moveToFragment(FRAG_INIT);
     }
@@ -180,19 +183,48 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
             moveToFragment(FRAG_WAIT_PHASE, state);
         }
 
         @Override
         public void onStateChanged(GameManagerState newState, GameManagerState oldState) {
-            if (newState.hasGameDataChanged(oldState)) {
+            if (AskNCastApplication.getInstance().isConnected() && newState.hasGameDataChanged(oldState)) {
                 new AlertDialog.Builder(MainActivity.this)
                         .setMessage("Game data changed: " + newState.getGameData())
                         .create()
                         .show();
+                boolean stop = false;
+                try {
+                    if (!newState.getGameData().has("phase"))
+                        stop = true;
+                    else
+                    {
+                        if (newState.getGameData().getString("phase").equals("voting"))
+                            moveToFragment(FRAG_VOTE, newState);
+                        else if (newState.getGameData().getString("phase").equals("choosing"))
+                        {
+                            if (!AskNCastApplication.getInstance().isPlaying())
+                                AskNCastApplication.getInstance().startPlaying();
+                            if (!newState.getGameData().has("questioner_id"))
+                                stop = true;
+                            else
+                            {
+                                if (newState.getGameData().getString("questioner_id").equals(AskNCastApplication.getInstance().getPlayerId()))
+                                    moveToFragment(FRAG_PICK_QUESTION, newState);
+                                else
+                                    moveToFragment(FRAG_WAIT_FOR_QUESTION, newState);
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    stop = true;
+                }
+                if (stop)
+                    AskNCastApplication.getInstance().stopPlaying();
             }
-            mFragment.onStateChanged(newState);
         }
 
         @Override

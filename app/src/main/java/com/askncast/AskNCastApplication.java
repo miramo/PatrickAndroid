@@ -2,13 +2,11 @@ package com.askncast;
 
 import android.app.Application;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.media.MediaRouteSelector;
 import android.support.v7.media.MediaRouter;
 
-import com.google.android.gms.cast.ApplicationMetadata;
 import com.google.android.gms.cast.Cast;
 import com.google.android.gms.cast.CastDevice;
 import com.google.android.gms.cast.CastMediaControlIntent;
@@ -16,7 +14,6 @@ import com.google.android.gms.cast.games.GameManagerClient;
 import com.google.android.gms.cast.games.GameManagerState;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.Result;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
@@ -41,10 +38,30 @@ public class AskNCastApplication extends Application {
     private GoogleApiClient mApiClient;
     private String mCastSessionId;
     private GameManagerClient mGameManagerClient;
-    private String mPlayerId = null;
+    private String mPlayerId;
+    private IQuestionsProvider mQuestionProvider;
 
     public String getPlayerId() {
         return mPlayerId;
+    }
+
+    public IQuestionsProvider getQuestionProvider() {
+        return mQuestionProvider;
+    }
+
+    public boolean isConnected() {
+        return mCastDevice != null
+                && mApiClient != null && mApiClient.isConnected()
+                && mGameManagerClient != null && !mGameManagerClient.isDisposed()
+                && mPlayerId != null;
+    }
+
+    public boolean isPlaying() {
+        return isConnected() && mGameManagerClient.getCurrentState().getPlayer(mPlayerId).getPlayerState() == GameManagerClient.PLAYER_STATE_PLAYING;
+    }
+
+    public void stopPlaying() {
+        setCastDevice(null);
     }
 
     public interface Listener extends GameManagerClient.Listener
@@ -58,6 +75,8 @@ public class AskNCastApplication extends Application {
 
     public AskNCastApplication() {
         mInstance = this;
+        mPlayerId = null;
+        mQuestionProvider = new QuestionsProviderStatic();
     }
 
     @Override
