@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Switch;
@@ -13,8 +14,12 @@ import android.widget.TextView;
 
 import com.google.android.gms.cast.games.GameManagerClient;
 import com.google.android.gms.cast.games.GameManagerState;
+import com.lorentzos.flingswipe.SwipeFlingAdapterView;
 
 import org.json.JSONException;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -43,22 +48,58 @@ public class VoteFragment extends StateAwareFragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_vote, container, false);
 
-        ((TextView)view.findViewById(R.id.question_text_view)).setText(mQuestion);
+//        ((TextView)view.findViewById(R.id.question_text_view)).setText(mQuestion);
         ((NumberPicker)view.findViewById(R.id.prognosis_number_picker)).setMaxValue(mNbPlayers);
         view.findViewById(R.id.skip_button).setVisibility(mSkipAvail ? View.VISIBLE : View.GONE);
 
-        view.findViewById(R.id.question_card_view).setOnTouchListener(new OnSwipeTouchListener(container.getContext())
-        {
+//        view.findViewById(R.id.question_card_view).setOnTouchListener(new OnSwipeTouchListener(container.getContext())
+//        {
+//            @Override
+//            public void onSwipeLeft() {
+//                super.onSwipeLeft();
+//                onVoteNoClicked();
+//            }
+//
+//            @Override
+//            public void onSwipeRight() {
+//                super.onSwipeRight();
+//                onVoteYesClicked();
+//            }
+//        });
+
+
+        //add the view via xml or programmatically
+        SwipeFlingAdapterView flingContainer = (SwipeFlingAdapterView)view.findViewById(R.id.question_swipe_view);
+        ArrayList<String> al = new ArrayList<String>();
+        al.add(mQuestion);
+
+        //choose your favorite adapter
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(view.getContext(), R.layout.question_view, R.id.question_text_view, al);
+        flingContainer.setAdapter(arrayAdapter);
+        flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
-            public void onSwipeLeft() {
-                super.onSwipeLeft();
+            public void removeFirstObjectInAdapter() {
+
+            }
+
+            @Override
+            public void onLeftCardExit(Object o) {
                 onVoteNoClicked();
             }
 
             @Override
-            public void onSwipeRight() {
-                super.onSwipeRight();
+            public void onRightCardExit(Object o) {
                 onVoteYesClicked();
+            }
+
+            @Override
+            public void onAdapterAboutToEmpty(int i) {
+
+            }
+
+            @Override
+            public void onScroll(float v) {
+
             }
         });
 
@@ -95,7 +136,7 @@ public class VoteFragment extends StateAwareFragment {
             e.printStackTrace();
         }
         if (getView() != null) {
-            ((TextView)getView().findViewById(R.id.question_text_view)).setText(mQuestion);
+//            ((TextView)getView().findViewById(R.id.question_text_view)).setText(mQuestion);
             ((NumberPicker)getView().findViewById(R.id.prognosis_number_picker)).setMaxValue(mNbPlayers);
             getView().findViewById(R.id.skip_button).setVisibility(mSkipAvail ? View.VISIBLE : View.GONE);
         }
