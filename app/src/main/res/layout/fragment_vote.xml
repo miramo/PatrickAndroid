@@ -2,49 +2,104 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.askncast.VoteFragment"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/question_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textSize="30sp" />
-
-    <Switch
-        android:id="@+id/answer_switch"
-        android:textOn="Yes"
-        android:textOff="No"
-        android:text="Answer: "
-        android:textSize="20sp"
+    <LinearLayout
+        android:id="@+id/answer_frame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        android:orientation="vertical">
+        <android.support.v7.widget.CardView
+            android:id="@+id/question_card_view"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"
+            app:cardBackgroundColor="@color/cardview_dark_background">
+            <TextView
+                android:id="@+id/question_text_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="Hello?"
+                android:textSize="30sp" />
+        </android.support.v7.widget.CardView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/vote_yes_button"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/yes"/>
+                <Button
+                    android:id="@+id/vote_no_button"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/prognosis_frame"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Prognosis: "
-            android:layout_gravity="center_vertical"
-            android:textSize="20sp"/>
-
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:text="@string/prognosis"
+            android:gravity="center"/>
         <NumberPicker
             android:id="@+id/prognosis_number_picker"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/prognosis_ok_button"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="OK"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/wait_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/wait_others"
+            android:textSize="@dimen/full_screen_text_size"/>
+
+        <Button
+            android:id="@+id/skip_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:text="@string/skip"
+            android:layout_gravity="center"
+            android:visibility="gone" />
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/vote_send"
-        android:layout_gravity="center_horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Send"
-        android:textSize="20sp"/>
 </LinearLayout>

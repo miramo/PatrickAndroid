@@ -29,6 +29,8 @@ public class VoteFragment extends StateAwareFragment {
     private int mNbPlayers;
     private boolean mSkipAvail = false;
 
+    private boolean mAnswer = false;
+
     public VoteFragment() {
         // Required empty public constructor
         mQuestion = "";
@@ -43,6 +45,22 @@ public class VoteFragment extends StateAwareFragment {
 
         ((TextView)view.findViewById(R.id.question_text_view)).setText(mQuestion);
         ((NumberPicker)view.findViewById(R.id.prognosis_number_picker)).setMaxValue(mNbPlayers);
+        view.findViewById(R.id.skip_button).setVisibility(mSkipAvail ? View.VISIBLE : View.GONE);
+
+        view.findViewById(R.id.question_card_view).setOnTouchListener(new OnSwipeTouchListener(container.getContext())
+        {
+            @Override
+            public void onSwipeLeft() {
+                super.onSwipeLeft();
+                onVoteYesClicked();
+            }
+
+            @Override
+            public void onSwipeRight() {
+                super.onSwipeRight();
+                onVoteNoClicked();
+            }
+        });
 
         // Init button binding
         ButterKnife.bind(this, view);
@@ -50,12 +68,21 @@ public class VoteFragment extends StateAwareFragment {
         return view;
     }
 
-    @OnClick(R.id.vote_send)
-    public void onVoteSend() {
-        getView().findViewById(R.id.answer_switch).setEnabled(false);
-        getView().findViewById(R.id.prognosis_number_picker).setEnabled(false);
-        getView().findViewById(R.id.vote_send).setVisibility(View.GONE);
-        AskNCastApplication.getInstance().sendVote(((Switch)getView().findViewById(R.id.answer_switch)).isChecked(), ((NumberPicker)getView().findViewById(R.id.prognosis_number_picker)).getValue());
+    @OnClick(R.id.vote_yes_button)
+    public void onVoteYesClicked() {
+        setVote(true);
+    }
+
+    @OnClick(R.id.vote_no_button)
+    public void onVoteNoClicked() {
+        setVote(false);
+    }
+
+    @OnClick(R.id.prognosis_ok_button)
+    public void onPrognosisOkButtonClicked() {
+        AskNCastApplication.getInstance().sendVote(mAnswer, ((NumberPicker)getView().findViewById(R.id.prognosis_number_picker)).getValue());
+        getView().findViewById(R.id.prognosis_frame).setVisibility(View.GONE);
+        getView().findViewById(R.id.wait_frame).setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -70,6 +97,13 @@ public class VoteFragment extends StateAwareFragment {
         if (getView() != null) {
             ((TextView)getView().findViewById(R.id.question_text_view)).setText(mQuestion);
             ((NumberPicker)getView().findViewById(R.id.prognosis_number_picker)).setMaxValue(mNbPlayers);
+            getView().findViewById(R.id.skip_button).setVisibility(mSkipAvail ? View.VISIBLE : View.GONE);
         }
+    }
+
+    public void setVote(boolean vote) {
+        mAnswer = vote;
+        getView().findViewById(R.id.answer_frame).setVisibility(View.GONE);
+        getView().findViewById(R.id.prognosis_frame).setVisibility(View.VISIBLE);
     }
 }

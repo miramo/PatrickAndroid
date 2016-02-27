@@ -8,6 +8,4 @@
     tools:context="com.askncast.MainActivity"
     android:id="@+id/fragment_container">
 
-
-
 </RelativeLayout>

@@ -9,7 +9,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 
 import com.google.android.gms.cast.games.GameManagerState;
 import com.orm.SugarContext;
@@ -190,7 +192,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onStateChanged(GameManagerState newState, GameManagerState oldState) {
-            if (AskNCastApplication.getInstance().isConnected() && newState.hasGameDataChanged(oldState)) {
+            if (AskNCastApplication.getInstance().isConnected() && (oldState == null || newState.hasGameDataChanged(oldState))) {
                 new AlertDialog.Builder(MainActivity.this)
                         .setMessage("Game data changed: " + newState.getGameData())
                         .create()

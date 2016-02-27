@@ -132,6 +132,12 @@ public class AskNCastApplication extends Application {
 
     public void startScan() {
         mMediaRouter.addCallback(mMediaRouterSelector, mMediaRouterCallback, MediaRouter.CALLBACK_FLAG_REQUEST_DISCOVERY);
+        if (mListener != null) {
+            if (isPlaying())
+                mListener.onStateChanged(this.mGameManagerClient.getCurrentState(), null);
+            else if (isConnected())
+                mListener.onConnected(this.mGameManagerClient.getCurrentState());
+        }
     }
 
     public void stopScan() {

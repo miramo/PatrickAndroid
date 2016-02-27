@@ -9,7 +9,8 @@
         <meta-data android:name="VERSION" android:value="2" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.askncast" />
         <!--Activities-->
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
