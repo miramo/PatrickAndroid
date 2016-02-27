@@ -36,17 +36,17 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <Button
-                    android:id="@+id/vote_yes_button"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="@string/yes"/>
-                <Button
                     android:id="@+id/vote_no_button"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:text="@string/no"/>
+                <Button
+                    android:id="@+id/vote_yes_button"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/yes"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

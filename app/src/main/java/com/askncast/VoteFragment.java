@@ -52,13 +52,13 @@ public class VoteFragment extends StateAwareFragment {
             @Override
             public void onSwipeLeft() {
                 super.onSwipeLeft();
-                onVoteYesClicked();
+                onVoteNoClicked();
             }
 
             @Override
             public void onSwipeRight() {
                 super.onSwipeRight();
-                onVoteNoClicked();
+                onVoteYesClicked();
             }
         });
 
