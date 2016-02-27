@@ -9,22 +9,28 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
-        android:layoutDirection="rtl">
+        android:layout_alignParentBottom="true">
+
+        <EditText
+            android:id="@+id/custom_question_edit_text"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:hint="@string/ask_a_custom_question"
+            android:inputType="textCapSentences"
+            android:imeOptions="actionSend" />
+
+        <ImageButton
+            android:id="@+id/mic_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_mic_white_24dp"/>
 
         <Button
             android:id="@+id/custom_question_send"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="Send"/>
-
-        <EditText
-            android:id="@+id/custom_question_edit_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/ask_a_custom_question"
-            android:inputType="textCapSentences"
-            android:imeOptions="actionSend" />
 
     </LinearLayout>
 

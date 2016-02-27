@@ -19,4 +19,6 @@
     <string name="no">No</string>
     <string name="prognosis">Prognosis</string>
     <string name="skip">Skip</string>
+    <string name="speech_prompt">Ask your question</string>
+    <string name="speech_not_supported">Speech not supported by your device</string>
 </resources>

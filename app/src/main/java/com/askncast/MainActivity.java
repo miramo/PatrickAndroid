@@ -83,10 +83,10 @@ public class MainActivity extends AppCompatActivity {
             mFragment = to;
         }
         if (state != null) {
-            new AlertDialog.Builder(MainActivity.this)
-                    .setMessage("Game state: " + state.getGameData())
-                    .create()
-                    .show();
+//            new AlertDialog.Builder(MainActivity.this)
+//                    .setMessage("Game state: " + state.getGameData())
+//                    .create()
+//                    .show();
             mFragment.onStateChanged(state);
         }
     }
@@ -156,14 +156,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public String getPlayerName() {
             String playerName = ((EditText)findViewById(R.id.name_edit_text)).getText().toString();
-
-            if (playerName.isEmpty())
-            {
-                new AlertDialog.Builder(MainActivity.this)
-                        .setMessage(getString(R.string.empty_name_err))
-                        .create()
-                        .show();
-            }
             return playerName;
         }
 
@@ -193,10 +185,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onStateChanged(GameManagerState newState, GameManagerState oldState) {
             if (AskNCastApplication.getInstance().isConnected() && (oldState == null || newState.hasGameDataChanged(oldState))) {
-                new AlertDialog.Builder(MainActivity.this)
-                        .setMessage("Game data changed: " + newState.getGameData())
-                        .create()
-                        .show();
                 boolean stop = false;
                 try {
                     if (!newState.getGameData().has("phase"))
