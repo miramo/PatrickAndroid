@@ -30,8 +30,9 @@ import butterknife.OnClick;
  */
 public class VoteFragment extends StateAwareFragment {
 
-    private String mQuestion;
+    private String mQuestion = "PLACEHOLDER";
     private int mNbPlayers;
+    private SwipeFlingAdapterView mFlingContainer;
     private boolean mSkipAvail = false;
 
     private boolean mAnswer = false;
@@ -69,14 +70,14 @@ public class VoteFragment extends StateAwareFragment {
 
 
         //add the view via xml or programmatically
-        SwipeFlingAdapterView flingContainer = (SwipeFlingAdapterView)view.findViewById(R.id.question_swipe_view);
+        mFlingContainer = (SwipeFlingAdapterView)view.findViewById(R.id.question_swipe_view);
         ArrayList<String> al = new ArrayList<String>();
         al.add(mQuestion);
 
         //choose your favorite adapter
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(view.getContext(), R.layout.question_view, R.id.question_text_view, al);
-        flingContainer.setAdapter(arrayAdapter);
-        flingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(view.getContext(), R.layout.question_card_view, R.id.question_text_view, al);
+        mFlingContainer.setAdapter(arrayAdapter);
+        mFlingContainer.setFlingListener(new SwipeFlingAdapterView.onFlingListener() {
             @Override
             public void removeFirstObjectInAdapter() {
 
@@ -99,7 +100,12 @@ public class VoteFragment extends StateAwareFragment {
 
             @Override
             public void onScroll(float v) {
+                View child = mFlingContainer.getChildAt(0);
 
+                float yes_alpha = (float)Math.max(0, Math.min(1, v / 0.7));
+                child.findViewById(R.id.yes_indicator).setAlpha(yes_alpha);
+                float no_alpha = (float)Math.max(0, Math.min(1, -v / 0.7));
+                child.findViewById(R.id.no_indicator).setAlpha(no_alpha);
             }
         });
 

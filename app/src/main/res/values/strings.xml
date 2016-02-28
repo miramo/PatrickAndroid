@@ -21,4 +21,5 @@
     <string name="skip">Skip</string>
     <string name="speech_prompt">Ask your question</string>
     <string name="speech_not_supported">Speech not supported by your device</string>
+    <string name="swipe">Swipe me</string>
 </resources>
