@@ -6,11 +6,13 @@
     app:cardBackgroundColor="@color/cardview_dark_background">
 
     <TextView
+        android:layout_margin="10sp"
         android:id="@+id/question_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="30sp"
         android:gravity="center"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:textSize="18sp"
+        android:text="Hello"/>
 
 </android.support.v7.widget.CardView>
