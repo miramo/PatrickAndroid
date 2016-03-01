@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Init database
         SugarContext.init(this);
+
         // Init button binding
         ButterKnife.bind(this);
 
