@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Ask\'n\'cast</string>
-    <!--<string name="APP_ID">B1E103F5</string>-->
-    <string name="APP_ID">340BE1E4</string>
+    <string name="APP_ID">B1E103F5</string>
+    <!--<string name="APP_ID">340BE1E4</string>-->
 
     <string name="prerence_name">PREF_NAME</string>
 
